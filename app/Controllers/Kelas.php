@@ -14,7 +14,7 @@ class Kelas extends BaseController
         $this->model = new ModelKelas();
     }
 
-    // Menampilkan semua kelas dengan join tabel lain (jika diperlukan)
+    // Menampilkan semua kelas
     public function index(): ResponseInterface
     {
         $data = $this->model
@@ -28,7 +28,7 @@ class Kelas extends BaseController
     // Menampilkan detail kelas berdasarkan kode_kelas
     public function show($kode_kelas = null)
     {
-        $data = $this->model->where('kode_kelas', $kode_kelas)->findAll();
+        $data = $this->model->find($kode_kelas);
 
         if ($data) {
             return $this->respond($data, 200);
@@ -39,68 +39,58 @@ class Kelas extends BaseController
 
     // Menambahkan data kelas baru
     public function create() 
-    {
-        $data = $this->request->getPost();
+{
+    $data = $this->request->getPost(['kode_kelas', 'nama_kelas']);
 
-        if (!$this->model->save($data)) {
-            return $this->fail($this->model->errors());
-        }
-
-        $response = [
-            'status' => 201,
-            'error' => null,
-            'messages' => [
-                'success' => 'Berhasil memasukkan data Kelas'
-            ]
-        ];
-        return $this->respondCreated($response);
+    if ($this->model->find($data['kode_kelas'])) {
+        return $this->fail("Kode kelas sudah ada.");
     }
+
+    if (!$this->model->insert($data)) {
+        return $this->fail($this->model->errors());
+    }
+
+    return $this->respondCreated([
+        'status' => 201,
+        'messages' => ['success' => 'Berhasil memasukkan data kelas']
+    ]);
+}
 
     // Mengupdate data kelas berdasarkan kode_kelas
     public function update($kode_kelas = null)
     {
-        $data = $this->request->getRawInput();
-        $data['kode_kelas'] = $kode_kelas;
-
-        $isExists = $this->model->find($kode_kelas);
-
-        if (!$isExists) {
+        if (!$this->model->find($kode_kelas)) {
             return $this->failNotFound("Data tidak ditemukan untuk kode kelas $kode_kelas");
         }
+
+        $data = [
+            'nama_kelas' => $this->request->getRawInput()['nama_kelas'] ?? null
+        ];
 
         if (!$this->model->update($kode_kelas, $data)) {
             return $this->fail($this->model->errors());
         }
 
-        $response = [
+        return $this->respond([
             'status' => 200,
             'error' => null,
-            'messages' => [
-                'success' => "Data kelas dengan kode_kelas $kode_kelas berhasil diupdate"
-            ]
-        ];
-
-        return $this->respond($response);
+            'messages' => ["success" => "Data kelas dengan kode_kelas $kode_kelas berhasil diupdate"]
+        ]);
     }
 
     // Menghapus data kelas berdasarkan kode_kelas
     public function delete($kode_kelas = null)
     {
-        $isExists = $this->model->find($kode_kelas);
-
-        if (!$isExists) {
+        if (!$this->model->find($kode_kelas)) {
             return $this->failNotFound("Data tidak ditemukan untuk kode kelas $kode_kelas");
         }
 
         $this->model->delete($kode_kelas);
 
-        $response = [
+        return $this->respondDeleted([
             'status' => 200,
             'error' => null,
-            'messages' => [
-                'success' => "Data kelas dengan kode_kelas $kode_kelas berhasil dihapus"
-            ]
-        ];
-        return $this->respondDeleted($response);
+            'messages' => ["success" => "Data kelas dengan kode_kelas $kode_kelas berhasil dihapus"]
+        ]);
     }
 }

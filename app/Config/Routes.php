@@ -9,3 +9,4 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->resource("mahasiswa");
 $routes->resource("kelas");
+$routes->resource("user");
