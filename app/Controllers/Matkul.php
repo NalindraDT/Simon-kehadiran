@@ -2,34 +2,34 @@
 
 namespace App\Controllers;
 use CodeIgniter\API\ResponseTrait;
-use App\Models\ModelMahasiswa;
+use App\Models\ModelMatkul;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class Mahasiswa extends BaseController
+class Matkul extends BaseController
 {
     use ResponseTrait;
 
     function __construct()
     {
-        $this->model = new ModelMahasiswa();
+        $this->model = new ModelMatkul();
     }
 
     // Menampilkan semua mahasiswa dengan join tabel kelas
     public function index(): ResponseInterface
     {
-        $data = $this->model->getMahasiswaWithClass();
+        $data = $this->model->getMatkul();
         return $this->respond($data, 200);
     }
 
     // Menampilkan detail mahasiswa berdasarkan NPM dengan join tabel kelas
-    public function show($npm = null)
+    public function show($kode_matkul = null)
     {
-        $data = $this->model->getMahasiswaWithClass($npm);
+        $data = $this->model->getMatkul($kode_matkul);
 
         if ($data) {
             return $this->respond($data, 200);
         } else {
-            return $this->failNotFound("Data tidak ditemukan untuk NPM $npm");
+            return $this->failNotFound("Data tidak ditemukan untuk kode_matkul $kode_matkul");
         }
     }
 
@@ -39,7 +39,7 @@ class Mahasiswa extends BaseController
     $data = $this->request->getPost();
 
     // Validasi manual untuk memastikan semua field yang diperlukan ada
-    $requiredFields = ['nama_mahasiswa', 'email', 'id_user', 'kode_kelas'];
+    $requiredFields = ['kode_matkul', 'nama_matkul', 'npm','nidn', 'kode_kelas'];
     foreach ($requiredFields as $field) {
         if (!isset($data[$field]) || empty($data[$field])) {
             return $this->fail("Field $field harus diisi");
@@ -50,6 +50,13 @@ class Mahasiswa extends BaseController
     $db = \Config\Database::connect();
 
     // Cek keberadaan kode kelas
+    $kelasExists = $db->table('mahasiswa')
+        ->where('kode_kelas', $data['npm'])
+        ->countAllResults() > 0;
+
+    if (!$kelasExists) {
+        return $this->fail("Kode kelas tidak valid");
+    }
     $kelasExists = $db->table('kelas')
         ->where('kode_kelas', $data['kode_kelas'])
         ->countAllResults() > 0;

@@ -2,34 +2,34 @@
 
 namespace App\Controllers;
 use CodeIgniter\API\ResponseTrait;
-use App\Models\ModelMahasiswa;
+use App\Models\ModelKehadiran;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class Mahasiswa extends BaseController
+class Kehadiran extends BaseController
 {
     use ResponseTrait;
 
     function __construct()
     {
-        $this->model = new ModelMahasiswa();
+        $this->model = new ModelKehadiran();
     }
 
     // Menampilkan semua mahasiswa dengan join tabel kelas
     public function index(): ResponseInterface
     {
-        $data = $this->model->getMahasiswaWithClass();
+        $data = $this->model->getKehadiran();
         return $this->respond($data, 200);
     }
 
     // Menampilkan detail mahasiswa berdasarkan NPM dengan join tabel kelas
-    public function show($npm = null)
+    public function show($id_kehadiran = null)
     {
-        $data = $this->model->getMahasiswaWithClass($npm);
+        $data = $this->model->getMahasiswaWithClass($id_kehadiran);
 
         if ($data) {
             return $this->respond($data, 200);
         } else {
-            return $this->failNotFound("Data tidak ditemukan untuk NPM $npm");
+            return $this->failNotFound("Data tidak ditemukan untuk id kehadiran $id_kehadiran");
         }
     }
 

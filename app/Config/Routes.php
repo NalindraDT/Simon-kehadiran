@@ -10,3 +10,6 @@ use CodeIgniter\Router\RouteCollection;
 $routes->resource("mahasiswa");
 $routes->resource("kelas");
 $routes->resource("user");
+$routes->resource("dosen");
+$routes->resource("matkul");
+$routes->resource("kehadiran");
