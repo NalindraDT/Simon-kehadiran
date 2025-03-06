@@ -18,8 +18,8 @@ class Matkul extends BaseController
     public function index(): ResponseInterface
     {
         $data = $this->model
-            ->select('matkul.kode_matkul, matkul.nama_matkul,')
-            ->orderBy('kelas.nama_kelas', 'asc')
+            ->select('matkul.kode_matkul, matkul.nama_matkul, matkul.sks')
+            ->orderBy('matkul.kode_matkul', 'asc')
             ->findAll();
 
         return $this->respond($data, 200);
@@ -28,92 +28,58 @@ class Matkul extends BaseController
     // Menampilkan detail mahasiswa berdasarkan NPM dengan join tabel kelas
     public function show($kode_matkul = null)
     {
-        $data = $this->model->getMatkul($kode_matkul);
+        $data = $this->model->find($kode_matkul);
 
         if ($data) {
             return $this->respond($data, 200);
         } else {
-            return $this->failNotFound("Data tidak ditemukan untuk kode_matkul $kode_matkul");
+            return $this->failNotFound("Data tidak ditemukan untuk kode matkul $kode_matkul");
         }
     }
 
     // Menambahkan data mahasiswa baru
     public function create() 
 {
-    $data = $this->request->getPost();
+    $data = $this->request->getPost(['kode_matkul', 'nama_matkul','sks']);
 
-    // Validasi manual untuk memastikan semua field yang diperlukan ada
-    $requiredFields = ['kode_matkul', 'nama_matkul', 'npm','nidn', 'kode_kelas'];
-    foreach ($requiredFields as $field) {
-        if (!isset($data[$field]) || empty($data[$field])) {
-            return $this->fail("Field $field harus diisi");
-        }
+    // Validasi manual sebelum insertion
+    if (empty($data['kode_matkul']) || empty($data['nama_matkul']) || empty($data['sks'])) {
+        return $this->fail("yang kurrang mohon di isi.");
     }
 
-    // Misalnya, cek apakah id_user dan kode_kelas valid
-    $db = \Config\Database::connect();
-
-    // Cek keberadaan kode kelas
-    $kelasExists = $db->table('mahasiswa')
-        ->where('kode_kelas', $data['npm'])
-        ->countAllResults() > 0;
-
-    if (!$kelasExists) {
-        return $this->fail("Kode kelas tidak valid");
-    }
-    $kelasExists = $db->table('kelas')
-        ->where('kode_kelas', $data['kode_kelas'])
-        ->countAllResults() > 0;
-
-    if (!$kelasExists) {
-        return $this->fail("Kode kelas tidak valid");
+    // Cek keberadaan kode kelas menggunakan query builder
+    $existingmatkul = $this->model->where('kode_matkul', $data['kode_matkul'])->first();
+    
+    if ($existingmatkul) {
+        return $this->fail("Kode matkul sudah ada.");
     }
 
-    // Cek keberadaan id_user
-    $userExists = $db->table('user')
-        ->where('id_user', $data['id_user'])
-        ->countAllResults() > 0;
-
-    if (!$userExists) {
-        return $this->fail("ID User tidak valid");
-    }
-
-    // Simpan data
-    $result = $this->model->save($data);
-
-    // Periksa apakah penyimpanan berhasil
-    if ($result === false) {
-        // Jika gagal, ambil error dari model
+    // Validasi dan simpan data
+    if ($this->model->save($data) === false) {
+        // Tangani kesalahan validasi
         return $this->fail($this->model->errors());
     }
 
-    $response = [
+    return $this->respondCreated([
         'status' => 201,
-        'error' => null,
-        'messages' => [
-            'success' => 'Berhasil memasukkan data mahasiswa',
-            'npm' => $data['npm']
-        ]
-    ];
-    return $this->respond($response);
+        'messages' => ['success' => 'Berhasil memasukkan data matkul']
+    ]);
 }
 
     // Mengupdate data mahasiswa berdasarkan NPM
-    public function update($npm = null)
+    public function update($kode_matkul = null)
 {
     // Ambil data dari input
     $data = $this->request->getRawInput();
 
     // Validasi keberadaan data mahasiswa
-    $isExists = $this->model->find($npm);
+    $isExists = $this->model->find($kode_matkul);
     if (!$isExists) {
-        return $this->failNotFound("Data tidak ditemukan untuk NPM $npm");
+        return $this->failNotFound("Data tidak ditemukan untuk kode matkul $kode_matkul");
     }
 
-    // Pastikan NPM tidak berubah jika tidak sengaja
-
     // Simpan data dengan metode update
-    if (!$this->model->update($npm, $data)) {
+    if (!$this->model->update($kode_matkul, $data)) {
         return $this->fail($this->model->errors());
     }
 
@@ -129,21 +95,21 @@ class Matkul extends BaseController
 }
 
     // Menghapus data mahasiswa berdasarkan NPM
-    public function delete($npm = null)
+    public function delete($kode_matkul = null)
     {
-        $isExists = $this->model->find($npm);
+        $isExists = $this->model->find($kode_matkul);
 
         if (!$isExists) {
-            return $this->failNotFound("Data tidak ditemukan untuk NPM $npm");
+            return $this->failNotFound("Data tidak ditemukan untuk kode_matkul $kode_matkul");
         }
 
-        $this->model->delete($npm);
+        $this->model->delete($kode_matkul);
 
         $response = [
             'status' => 200,
             'error' => null,
             'messages' => [
-                'success' => "Data mahasiswa dengan NPM $npm berhasil dihapus"
+                'success' => "Data mahasiswa dengan kode matkul $kode_matkul berhasil dihapus"
             ]
         ];
         return $this->respondDeleted($response);
