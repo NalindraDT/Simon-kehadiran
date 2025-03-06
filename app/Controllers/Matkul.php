@@ -17,7 +17,11 @@ class Matkul extends BaseController
     // Menampilkan semua mahasiswa dengan join tabel kelas
     public function index(): ResponseInterface
     {
-        $data = $this->model->getMatkul();
+        $data = $this->model
+            ->select('matkul.kode_matkul, matkul.nama_matkul,')
+            ->orderBy('kelas.nama_kelas', 'asc')
+            ->findAll();
+
         return $this->respond($data, 200);
     }
 

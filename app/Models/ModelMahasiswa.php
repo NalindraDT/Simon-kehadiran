@@ -52,6 +52,6 @@ class ModelMahasiswa extends Model
             return $data ?: null;
         }
 
-        return $query->orderBy('mahasiswa.nama_mahasiswa', 'asc')->findAll();
+        return $query->orderBy('mahasiswa.npm', 'asc')->findAll();
     }
 }

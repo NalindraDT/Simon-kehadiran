@@ -13,3 +13,4 @@ $routes->resource("user");
 $routes->resource("dosen");
 $routes->resource("matkul");
 $routes->resource("kehadiran");
+$routes->resource("kehadiran1");

@@ -40,19 +40,4 @@ class ModelMatkul extends Model
         ]
     ];
 
-    // Method untuk mengambil data mahasiswa dengan join tabel kelas
-    public function getMatkul($kode_matkul = null)
-    {
-        $query = $this->select('matkul.kode_matkul, matkul.nama_matkul, mahasiswa.nama_mahasiswa, dosen.nama_dosen, kelas.nama_kelas')
-            ->join('mahasiswa', 'mahasiswa.npm = matkul.npm', 'left')
-            ->join('dosen', 'dosen.nidn = matkul.nidn', 'left')
-            ->join('kelas', 'kelas.kode_kelas = matkul.kode_kelas', 'left');
-
-        if ($kode_matkul !== null) {
-            $data = $query->where('matkul.kode_matkul', $kode_matkul)->first();
-            return $data ?: null;
-        }
-
-        return $query->orderBy('matkul.kode_matkul', 'asc')->findAll();
-    }
 }
