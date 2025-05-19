@@ -33,7 +33,7 @@ NPM     : 230202070
 3. selanjutnya masuk ke terminal lalu pergi ke path laragon
 contoh path:
 ```
-cd laragon\www\Backend
+C:\ cd laragon\www\Backend
 ```
 4. Masukan perintah berikut untuk melakukan cloning
 ```
@@ -43,8 +43,41 @@ git clone https://github.com/NalindraDT/Simon-kehadiran.git
 5. Selanjutnya buka folder tersebut dalam bentuk visual code, dengan masuk path folder tersebut lalu ketik code .
 
 ```
-cd Simon-kehadiran
-
-code .
+C:\laragon\www\Backend cd Simon-kehadiran
+```
 
 ```
+code .
+```
+6. Setelah terbuka maka selanjutnya pergi ke terminal dalam vs code (bisa mengggunkan ctrl + shift + ` )
+
+7.  Lakukan penginstallan composer dengan menggunakan syntax ini
+```
+C:\laragon\www\Backend\Simon-kehadiran composer install
+```
+8. Jika penginstallan composer gagal maka pindah ke terminal laragon lalu lakukan hal yang sama
+
+```
+C:\laragon\www\Backend\Simon-kehadiran composer install
+```
+
+9. Jika masih muncul error maka kemungkinan berada di versi nya, untuk itu ketik syntax
+```
+composer update
+```
+10. Jika sudah, maka pergi ke file env lalu duplikat file tersebut, dengan tujuan karena env nantinya kan diubah ubah, maka sebaiknya buat duplikat sebagai backup
+
+11. Ubah nama file env yang digunakan menjadi .env
+
+12. Selanjutnya hilangkan comment pada penghubung database lalu isi sesuai kebutuhan
+```
+database.default.hostname = localhost
+database.default.database = ci4
+database.default.username = root
+database.default.password = root
+database.default.DBDriver = MySQLi
+database.default.DBPrefix =
+database.default.port = 3306
+```
+
+13. Setelah selesai semua maka lanjutkan dengan pengetesan pada aplikasi postman, gunakan endpoint - endpoint. berikut endpoiny yang bisa digunakan
