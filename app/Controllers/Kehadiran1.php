@@ -110,5 +110,30 @@ class Kehadiran1 extends BaseController
             ]
         ]);
     }
+
+    // 🔹 GET: Menampilkan data kehadiran berdasarkan NPM
+public function byNpm($npm = null)
+{
+    $data = $this->modelKehadiran1->where('npm', $npm)->findAll();
+
+    if ($data) {
+        return $this->respond($data, 200);
+    } else {
+        return $this->failNotFound("Data kehadiran tidak ditemukan untuk NPM: $npm");
+    }
+}
+
+// 🔹 GET: Menampilkan data kehadiran berdasarkan Username
+public function byUsername($username = null)
+{
+    $data = $this->modelKehadiran1->where('username', $username)->findAll();
+
+    if ($data) {
+        return $this->respond($data, 200);
+    } else {
+        return $this->failNotFound("Data kehadiran tidak ditemukan untuk Username: $username");
+    }
+}
+
     
 }
