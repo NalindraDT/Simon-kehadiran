@@ -15,7 +15,7 @@ class ModelKehadiran extends Model
         'tanggal' => 'required',
         'pertemuan' => 'required',
         'status' => 'required',
-        'npm' => 'required|is_unique[kehadiran.npm,id_kehadiran,{id_kehadiran}]',
+        'npm' => 'required',
         'nidn' => 'required',
         'kode_matkul' => 'required',
         'kode_kelas' => 'required'

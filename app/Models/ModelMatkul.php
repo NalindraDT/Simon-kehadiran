@@ -12,7 +12,7 @@ class ModelMatkul extends Model
 
     // Validation rules
     protected $validationRules = [
-        'kode_matkul' => 'required|is_unique[matkul.kode_matkul]',
+        'kode_matkul' => 'required',
         'nama_matkul' => 'required',
         'sks' => 'required',
     ];

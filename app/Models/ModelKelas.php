@@ -14,7 +14,7 @@ class ModelKelas extends Model
 
     // Validation rules
     protected $validationRules = [
-        'kode_kelas' => 'required|is_unique[kelas.kode_kelas]',
+        'kode_kelas' => 'required',
         'nama_kelas' => 'required'
     ];
 

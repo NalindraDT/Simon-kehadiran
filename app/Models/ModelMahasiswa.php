@@ -15,7 +15,7 @@ class ModelMahasiswa extends Model
         'npm' => 'required',
         'nama_mahasiswa' => 'required',
         'email' => 'required|valid_email',
-        'id_user' => 'required|is_unique[mahasiswa.id_user]',
+        'id_user' => 'required',
         'kode_kelas' => 'required',
     ];
 

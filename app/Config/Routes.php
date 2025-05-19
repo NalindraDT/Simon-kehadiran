@@ -13,3 +13,5 @@ $routes->resource("user");
 $routes->resource("dosen");
 $routes->resource("matkul");
 $routes->resource("kehadiran1");
+$routes->post('login', 'Auth::login');
+$routes->get('kelas', 'Kelas::index', ['filter' => 'auth']); // Contoh proteksi

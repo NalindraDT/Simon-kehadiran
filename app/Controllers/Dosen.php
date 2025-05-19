@@ -86,7 +86,7 @@ class Dosen extends BaseController
     public function update($nidn = null)
 {
     // Ambil data dari input
-    $data = $this->request->getRawInput();
+    $data = $this->request->getJSON(true) ?? $this->request->getRawInput() ?? $this->request->getVar();
 
     // Validasi keberadaan data mahasiswa
     $isExists = $this->model->find($nidn);

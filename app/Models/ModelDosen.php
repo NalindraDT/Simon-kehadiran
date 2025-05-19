@@ -14,9 +14,9 @@ class ModelDosen extends Model
 
     // Validation rules
     protected $validationRules = [
-        'nidn' => 'required|is_unique[dosen.nidn]',
+        'nidn' => 'required',
         'nama_dosen' => 'required',
-        'id_user' => 'required|is_unique[dosen.id_user]',
+        'id_user' => 'required',
 
     ];
 

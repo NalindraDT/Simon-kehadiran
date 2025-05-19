@@ -67,36 +67,62 @@ class Kelas extends BaseController
 }
 
     // Mengupdate data kelas berdasarkan kode_kelas
-    public function update($kode_kelas = null)
+//     public function update($kode_kelas = null)
+// {
+//     $existingData = $this->model->find($kode_kelas);
+//     if (!$existingData) {
+//         return $this->failNotFound("Data tidak ditemukan untuk kode kelas $kode_kelas");
+//     }
+
+//     $newKodeKelas = $this->request->getRawInput()['kode_kelas'] ?? $kode_kelas;
+//     $namaKelas = $this->request->getRawInput()['nama_kelas'] ?? $existingData['nama_kelas'];
+
+//     $data = [
+//         'kode_kelas' => $newKodeKelas,
+//         'nama_kelas' => $namaKelas
+//     ];
+
+//     if (!$this->model->update($kode_kelas, $data)) {
+//         return $this->fail($this->model->errors());
+//     }
+
+//     // Jika kode_kelas berubah, hapus entri lama dan tambahkan entri baru
+//     if ($newKodeKelas !== $kode_kelas) {
+//         $this->model->delete($kode_kelas);
+//         $this->model->insert($data);
+//     }
+
+//     return $this->respond([
+//         'status' => 200,
+//         'error' => null,
+//         'messages' => ["success" => "Data kelas berhasil diupdate menjadi kode_kelas $newKodeKelas"]
+//     ]);
+// }
+
+public function update($kode_kelas = null)
 {
-    $existingData = $this->model->find($kode_kelas);
-    if (!$existingData) {
-        return $this->failNotFound("Data tidak ditemukan untuk kode kelas $kode_kelas");
+    // Ambil data dari input
+    $data = $this->request->getJSON(true) ?? $this->request->getRawInput() ?? $this->request->getVar();
+
+    // Validasi keberadaan data mahasiswa
+    $isExists = $this->model->find($kode_kelas);
+    if (!$isExists) {
+        return $this->failNotFound("Data tidak ditemukan untuk kode matkul $kode_kelas");
     }
 
-    $newKodeKelas = $this->request->getRawInput()['kode_kelas'] ?? $kode_kelas;
-    $namaKelas = $this->request->getRawInput()['nama_kelas'] ?? $existingData['nama_kelas'];
-
-    $data = [
-        'kode_kelas' => $newKodeKelas,
-        'nama_kelas' => $namaKelas
-    ];
-
+    // Simpan data dengan metode update
     if (!$this->model->update($kode_kelas, $data)) {
         return $this->fail($this->model->errors());
     }
 
-    // Jika kode_kelas berubah, hapus entri lama dan tambahkan entri baru
-    if ($newKodeKelas !== $kode_kelas) {
-        $this->model->delete($kode_kelas);
-        $this->model->insert($data);
-    }
-
-    return $this->respond([
+    $response = [
         'status' => 200,
         'error' => null,
-        'messages' => ["success" => "Data kelas berhasil diupdate menjadi kode_kelas $newKodeKelas"]
-    ]);
+        'messages' => [
+            'success' => "Data kelas berhasil diupdate"
+        ]
+        ];
+    return $this->respond($response);
 }
 
 

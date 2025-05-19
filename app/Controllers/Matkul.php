@@ -70,7 +70,7 @@ class Matkul extends BaseController
     public function update($kode_matkul = null)
 {
     // Ambil data dari input
-    $data = $this->request->getRawInput();
+    $data = $this->request->getJSON(true) ?? $this->request->getRawInput() ?? $this->request->getVar();
 
     // Validasi keberadaan data mahasiswa
     $isExists = $this->model->find($kode_matkul);

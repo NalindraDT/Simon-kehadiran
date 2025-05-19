@@ -91,7 +91,7 @@ class Mahasiswa extends BaseController
     public function update($npm = null)
 {
     // Ambil data dari input
-    $data = $this->request->getRawInput();
+    $data = $this->request->getJSON(true) ?? $this->request->getRawInput() ?? $this->request->getVar();
 
     // Validasi keberadaan data mahasiswa
     $isExists = $this->model->find($npm);

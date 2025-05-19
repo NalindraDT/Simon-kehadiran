@@ -71,7 +71,7 @@ class Kehadiran1 extends BaseController
     // 🔹 PUT: Mengupdate data kehadiran berdasarkan ID Kehadiran
     public function update($id_kehadiran = null)
 {
-    $data = $this->request->getRawInput();
+    $data = $this->request->getJSON(true) ?? $this->request->getRawInput() ?? $this->request->getVar();
 
     // Pastikan data dengan ID tersebut ada
     if (!$this->modelKehadiran->find($id_kehadiran)) {
