@@ -8,6 +8,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 class Mahasiswa extends BaseController
 {
     use ResponseTrait;
+    protected $model;
 
     function __construct()
     {
