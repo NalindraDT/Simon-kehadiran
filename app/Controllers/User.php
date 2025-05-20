@@ -8,7 +8,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 class User extends BaseController
 {
     use ResponseTrait;
-
+    protected $model;
     function __construct()
     {
         $this->model = new ModelUser();
