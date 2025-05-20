@@ -6,6 +6,7 @@ use CodeIgniter\API\ResponseTrait;
 use App\Models\ModelKehadiran;
 use App\Models\ModelKehadiran1;
 use CodeIgniter\HTTP\ResponseInterface;
+use Dompdf\Dompdf;
 
 class Kehadiran1 extends BaseController
 {
@@ -32,14 +33,14 @@ class Kehadiran1 extends BaseController
     public function show($id_kehadiran = null)
     {
         $data = $this->modelKehadiran1->where('id_kehadiran', $id_kehadiran)->first();
-    
+
         if ($data) {
             return $this->respond($data, 200);
         } else {
             return $this->failNotFound("Data tidak ditemukan untuk ID Kehadiran $id_kehadiran");
         }
     }
-    
+
 
     // 🔹 POST: Menambahkan data kehadiran baru (menggunakan tabel asli)
     public function create()
@@ -70,27 +71,27 @@ class Kehadiran1 extends BaseController
 
     // 🔹 PUT: Mengupdate data kehadiran berdasarkan ID Kehadiran
     public function update($id_kehadiran = null)
-{
-    $data = $this->request->getJSON(true) ?? $this->request->getRawInput() ?? $this->request->getVar();
+    {
+        $data = $this->request->getJSON(true) ?? $this->request->getRawInput() ?? $this->request->getVar();
 
-    // Pastikan data dengan ID tersebut ada
-    if (!$this->modelKehadiran->find($id_kehadiran)) {
-        return $this->failNotFound("Data tidak ditemukan untuk ID Kehadiran $id_kehadiran");
+        // Pastikan data dengan ID tersebut ada
+        if (!$this->modelKehadiran->find($id_kehadiran)) {
+            return $this->failNotFound("Data tidak ditemukan untuk ID Kehadiran $id_kehadiran");
+        }
+
+        // Update data
+        if (!$this->modelKehadiran->update($id_kehadiran, $data)) {
+            return $this->fail($this->modelKehadiran->errors());
+        }
+
+        return $this->respond([
+            'status' => 200,
+            'error' => null,
+            'messages' => [
+                'success' => 'Data kehadiran berhasil diperbarui'
+            ]
+        ]);
     }
-
-    // Update data
-    if (!$this->modelKehadiran->update($id_kehadiran, $data)) {
-        return $this->fail($this->modelKehadiran->errors());
-    }
-
-    return $this->respond([
-        'status' => 200,
-        'error' => null,
-        'messages' => [
-            'success' => 'Data kehadiran berhasil diperbarui'
-        ]
-    ]);
-}
 
 
     // 🔹 DELETE: Menghapus data kehadiran berdasarkan ID Kehadiran
@@ -99,9 +100,9 @@ class Kehadiran1 extends BaseController
         if (!$this->modelKehadiran->find($id_kehadiran)) {
             return $this->failNotFound("Data tidak ditemukan untuk ID Kehadiran $id_kehadiran");
         }
-    
+
         $this->modelKehadiran->delete($id_kehadiran);
-    
+
         return $this->respondDeleted([
             'status' => 200,
             'error' => null,
@@ -112,28 +113,46 @@ class Kehadiran1 extends BaseController
     }
 
     // 🔹 GET: Menampilkan data kehadiran berdasarkan NPM
-public function byNpm($npm = null)
-{
-    $data = $this->modelKehadiran1->where('npm', $npm)->findAll();
+    public function byNpm($npm = null)
+    {
+        $data = $this->modelKehadiran1->where('npm', $npm)->findAll();
 
-    if ($data) {
-        return $this->respond($data, 200);
-    } else {
-        return $this->failNotFound("Data kehadiran tidak ditemukan untuk NPM: $npm");
+        if ($data) {
+            return $this->respond($data, 200);
+        } else {
+            return $this->failNotFound("Data kehadiran tidak ditemukan untuk NPM: $npm");
+        }
     }
-}
 
-// 🔹 GET: Menampilkan data kehadiran berdasarkan Username
-public function byUsername($username = null)
-{
-    $data = $this->modelKehadiran1->where('username', $username)->findAll();
+    // 🔹 GET: Menampilkan data kehadiran berdasarkan Username
+    public function byUsername($username = null)
+    {
+        $data = $this->modelKehadiran1->where('username', $username)->findAll();
 
-    if ($data) {
-        return $this->respond($data, 200);
-    } else {
-        return $this->failNotFound("Data kehadiran tidak ditemukan untuk Username: $username");
+        if ($data) {
+            return $this->respond($data, 200);
+        } else {
+            return $this->failNotFound("Data kehadiran tidak ditemukan untuk Username: $username");
+        }
     }
-}
 
     
+
+public function cetak()
+{
+    $model = new ModelKehadiran1();
+    $dataKehadiran = $model->findAll();
+
+    if (!$dataKehadiran) {
+        echo "Data tidak ditemukan untuk cetak";
+        return;
+    }
+
+    $dompdf = new Dompdf();
+    $dompdf->loadHtml(view('kehadiran_pdf', ['kehadiran' => $dataKehadiran]));
+    $dompdf->setPaper('A4', 'landscape');
+    $dompdf->render();
+    $dompdf->stream('data-kehadiran.pdf');
+}
+
 }
