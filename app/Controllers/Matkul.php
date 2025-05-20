@@ -8,6 +8,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 class Matkul extends BaseController
 {
     use ResponseTrait;
+    protected $model;
 
     function __construct()
     {
