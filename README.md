@@ -118,6 +118,11 @@ database.default.port = 3306
 - PUT kehadiran : http://localhost:8080/kehadiran1/{id_kehadiran}
 - DELETE kehadiran : http://localhost:8080/kehadiran1/{id_kehadiran}
 
+
+#### G. Cetak
+- GET cetak : http://localhost:8080/kehadiran1/cetak
+(endpoint cetak hanya dapat berjalan di browser)
+
 ### PENTING !!!
 Jika saat mengpost muncul error, maka pilih lah bagian body lalu raw, lalu masukan secara manual seperti berikut
 ```
