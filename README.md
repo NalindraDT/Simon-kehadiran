@@ -23,6 +23,11 @@ NPM     : 230202070
 - **Pengelolaan data** : User - user tertentu dapat melihat, menambahkan, mengedit data.
 - **Pencarian data**: user dapat mencari data sesuai dengan yang ada dalam table
 
+
+## Link database github :
+```
+https://github.com/JiRizkyCahyusna/DBE_Simon
+```
 ## Langkah langkah penggunaan
 
 ### 1. Buka repo backend berikut [Simon-kehadiran](https://github.com/NalindraDT/Simon-kehadiran)
