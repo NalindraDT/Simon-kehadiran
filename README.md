@@ -77,9 +77,9 @@ composer update
 ### 12. Selanjutnya hilangkan comment pada penghubung database lalu isi sesuai kebutuhan
 ```
 database.default.hostname = localhost
-database.default.database = ci4
+database.default.database = {nama database}
 database.default.username = root
-database.default.password = root
+database.default.password = 
 database.default.DBDriver = MySQLi
 database.default.DBPrefix =
 database.default.port = 3306
