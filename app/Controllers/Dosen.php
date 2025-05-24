@@ -8,10 +8,11 @@ use CodeIgniter\HTTP\ResponseInterface;
 class Dosen extends BaseController
 {
     use ResponseTrait;
-
+protected $model;
     function __construct()
     {
         $this->model = new ModelDosen();
+        
     }
 
     // Menampilkan semua kelas
